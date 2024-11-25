@@ -70,6 +70,7 @@ class BaseMerkleTree(MerkleHasher, metaclass=ABCMeta):
         self.security = not opts.get('disable_security', False)
         self.threshold = opts.get('threshold', 128)
         self.capacity = opts.get('capacity', 1024 ** 3)
+        self.sort_pairs = opts.get('sort_pairs', False)
         self.cache = LRUCache(maxsize=self.capacity, getsizeof=len)
         self.hits = 0
         self.misses = 0
@@ -346,6 +347,8 @@ class BaseMerkleTree(MerkleHasher, metaclass=ABCMeta):
             while count < width:
                 lnode = popleft()
                 rnode = popleft()
+                if (self.sort_pairs and lnode > rnode):
+                    lnode, rnode = rnode, lnode
                 node = hashfunc(prefx01 + lnode + rnode).digest()
                 append(node)
                 count += 2
