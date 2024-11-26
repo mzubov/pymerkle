@@ -388,7 +388,7 @@ class BaseMerkleTree(MerkleHasher, metaclass=ABCMeta):
         while len(subroots) > 1:
             lnode = pop()
             rnode = pop()
-            if (self.sort_pairs and lnode > rnode):
+            if (self.sort_pairs and lnode < rnode):
                 lnode, rnode = rnode, lnode
             node = hashfunc(prefx01 + rnode + lnode).digest()
             append(node)
