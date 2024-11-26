@@ -388,6 +388,8 @@ class BaseMerkleTree(MerkleHasher, metaclass=ABCMeta):
         while len(subroots) > 1:
             lnode = pop()
             rnode = pop()
+            if (self.sort_pairs and lnode > rnode):
+                lnode, rnode = rnode, lnode
             node = hashfunc(prefx01 + rnode + lnode).digest()
             append(node)
 
@@ -534,6 +536,8 @@ class BaseMerkleTree(MerkleHasher, metaclass=ABCMeta):
 
         lnode = self._get_root_naive(start, start + k)
         rnode = self._get_root_naive(start + k, limit)
+        if (self.sort_pairs and lnode > rnode):
+            lnode, rnode = rnode, lnode
 
         return self._hash_nodes(lnode, rnode)
 
